@@ -7,7 +7,7 @@ typedef struct {
 }Clipboard;
 
 typedef struct Stack {
-    Clipboard clipboards;
+    Clipboard* clipboards;
     int capacity;
     int top;
 } Stack;
@@ -16,14 +16,14 @@ Stack* createStack(int capacity) {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
     stack->capacity = capacity;
     stack -> top = -1;
-    stack -> clipboards = (Clipboard*)malloc(sizeof(Clipboard));
+    stack -> clipboards = (Clipboard*)malloc(capacity * sizeof(Clipboard));
     return stack;
 }
 Clipboard createClipboard() {
     Clipboard clipboard;
     printf("Nhap doan van ban: ");
-    fflush(stdin);
-    gets(clipboard.string);
+    fgets(clipboard.string, sizeof(clipboard.string), stdin);
+    clipboard.string[strcspn(clipboard.string, "\n")] = 0;
     return clipboard;
 }
 void push(Stack* stack, Clipboard clipboard) {
@@ -55,7 +55,17 @@ void peek(Stack *stack) {
         printf("Stack is empty\n");
         return;
     }
-    printf("Clipboard hien tai la: %s\n", stack->clipboards[stack->top].url);
+    printf("Clipboard hien tai la: %s\n", stack->clipboards[stack->top].string);
+}
+void display(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack rong\n");
+        return;
+    }
+    printf("\n-----Noi dung clipboard-----\n");
+    for (int i=0l; i<= stack->top; i++) {
+        printf("%d. %s\n", i+1, stack -> clipboards[i].string);
+    }
 }
 int main() {
     int choice;
@@ -96,6 +106,7 @@ int main() {
                 push(clipboardStack, redoClipboard);
                 break;
             case 5:
+                display(clipboardStack);
                 break;
             case 6:
                 printf("Thoat\n");
