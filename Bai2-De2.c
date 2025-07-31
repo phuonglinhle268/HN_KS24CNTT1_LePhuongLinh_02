@@ -13,56 +13,37 @@ typedef struct TreeNode {
     struct TreeNode *left;
     struct TreeNode* right;
 }TreeNode;
-TreeNode* createNode(int data) {
+TreeNode* createNode(Contact data) {
     TreeNode* newNode = (TreeNode*)malloc(sizeof(TreeNode));
     newNode -> data = data;
     newNode -> left = NULL;
     newNode -> right = NULL;
+    return newNode;
 }
-TreeNode* insert(TreeNode* root, int data) {
+TreeNode* insert(TreeNode* root, Contact data) {
     if (root == NULL) {
         return createNode(data);
     }
-    if (data < root -> data) {
+    if (strcmp(data.name, root -> data.name) < 0) {
         root -> left = insert(root -> left, data);
-    } else if (data > root -> data) {
+    } else if (strcmp(data.name, root -> data.name) > 0) {
         root -> right = insert(root -> right, data);
-    } else {
-        printf("Gia tri da ton tai\n");
     }
     return root;
 }
-int checkName(const char* newName) {
-    TreeNode* current = root;
-    while (current != NULL) {
-        char tempNew[100], tempCurrent[100];
-        strcpy(tempNew, newName);
-        strcpy(tempCurrent, current -> data.name);
 
-        for (int i = 0; tempNew[i]; i++) {
-            tolower((unsigned char)tempNew[i]);
-        }
-        for (int i = 0; tempCurrent[i]; i++) {
-            tolower((unsigned char)tempCurrent[i]);
-        }
-        if (strcmp(tempNew, temCurrent)==0) {
-            return 1;
-        }
-        current = current -> left;
-    }
-    return 0;
-}
 void inOrder(TreeNode* root) {
     if (root == NULL) {
         return;
     }
     inOrder(root -> left);
-    printf("%s\n", root -> data.name);
+    printf("Ten: %s | So dien thoai: %s | Email: %s\n", root -> data.name, root->data.phone, root->data.email);
     inOrder(root -> right);
 }
 int main() {
     int choice;
     TreeNode* root = NULL;
+    Contact contact;
     do {
         printf("\n---QUAN LI DANH BA---\n");
         printf("1. Them nguoi dung vao danh ba\n");
@@ -75,20 +56,35 @@ int main() {
         switch (choice) {
             case 1:
                 getchar();
-                printf("Nhap ten: ");
-                fgets(temp ,50, sdin);
-                temp[strcspn(temp, "\n")] = '\0';
+                printf("Nhap ho ten: ");
+                fgets(contact.name, 50, stdin);
+                contact.name[strcspn(contact.name, "\n")] = 0;
                 printf("Nhap so dien thoai: ");
-                fgets();
+                fgets(contact.phone, 15, stdin);
+                contact.phone[strcspn(contact.phone, "\n")] = 0;
                 printf("Nhap email: ");
-                root = insert(root, value);
+                fgets(contact.email, 50, stdin);
+                contact.email[strcspn(contact.email, "\n")] = 0;
+                root = insert(root,contact);
                 printf("Da them thanh cong\n");
                 break;
             case 2:
-                printf("Nhap ten muon xoa: ");
-
-                root = delete(root, value);
+                if (root == NULL) {
+                    printf("Danh ba trong\n");
+                } else {
+                    printf("Danh ba: \n");
+                    inOrder(root);
+                }
                 break;
+            case 3:
+                printf("Nhap ten can tim: ");
+                fgets(contact.name, 50, stdin);
+                contact.name[strcspn(contact.name, "\n")] = 0;
+                break;
+            case 4:
+                printf("Nhap ten can xoa: ");
+                fgets(contact.name, 50, stdin);
+                contact.name[strcspn(contact.name, "\n")] = 0;
             case 5:
                 printf("Thoat\n");
                 break;
